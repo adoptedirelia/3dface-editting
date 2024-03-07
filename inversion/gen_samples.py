@@ -153,7 +153,7 @@ def generate_images(
 
     os.makedirs(outdir, exist_ok=True)
 
-    ppl = 'zdj'
+    ppl = 'dlrb'
         
     with open(f'./embeddings/PTI//{ppl}/model_{ppl}.pt', 'rb') as f_new: 
         G = torch.load(f_new).cuda()
@@ -169,11 +169,11 @@ def generate_images(
         imgs = []
         angle_p = -0.2
         angle_y = 0
-        #for angle_y in range(-10,10,1):
+        #for angle_y in range(-5,5,1):
         #    angle_y /= 10
-        #for angle_y, angle_p in [(.4, angle_p),(.2, angle_p), (0, angle_p), (-.2, angle_p),(-.4, angle_p)]:
-        for angle_p in range(-5,5,1):
-            angle_p /=10
+        for angle_y, angle_p in [(.4, angle_p),(.2, angle_p), (0, angle_p), (-.2, angle_p),(-.4, angle_p)]:
+        #for angle_p in range(-5,5,1):
+        #    angle_p /=10
             cam_pivot = torch.tensor(G.rendering_kwargs.get('avg_camera_pivot', [0, 0, 0]), device=device)
             cam_radius = G.rendering_kwargs.get('avg_camera_radius', 2.7)
             cam2world_pose = LookAtPoseSampler.sample(np.pi/2 + angle_y, np.pi/2 + angle_p, cam_pivot, radius=cam_radius, device=device)
