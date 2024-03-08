@@ -1,6 +1,6 @@
 # 3dface-pose-editting
 
-基于EG3D+PTI的人脸姿势变化
+基于EG3D+PTI的人脸姿势变化，这个readme写的多么详细！快看看吧
 
 
 # 效果展示
