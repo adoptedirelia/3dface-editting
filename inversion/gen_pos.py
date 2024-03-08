@@ -166,7 +166,7 @@ def generate_images(
     # Generate images.
 
     #print('Generating image for seed %d (%d/%d) ...' % (seed, seed_idx, len(seeds)))
-    #z = torch.from_numpy(np.random.RandomState(seed).randn(1, G.z_dim)).to(device)
+    z = torch.from_numpy(np.random.RandomState(1234).randn(1, G.z_dim)).to(device)
 
     imgs = []
     angle_p = -0.2
@@ -193,7 +193,7 @@ def generate_images(
 
     img = torch.cat(imgs, dim=2)
 
-    PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(f'{outdir}/seed{seed:04d}.png')
+    PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(f'{outdir}/{ppl}.png')
 
     if shapes:
         # extract a shape.mrc with marching cubes. You can view the .mrc file using ChimeraX from UCSF.
@@ -232,7 +232,7 @@ def generate_images(
             from shape_utils import convert_sdf_samples_to_ply
             convert_sdf_samples_to_ply(np.transpose(sigmas, (2, 1, 0)), [0, 0, 0], 1, os.path.join(outdir, f'seed{seed:04d}.ply'), level=10)
         elif shape_format == '.mrc': # output mrc
-            with mrcfile.new_mmap(os.path.join(outdir, f'seed{seed:04d}.mrc'), overwrite=True, shape=sigmas.shape, mrc_mode=2) as mrc:
+            with mrcfile.new_mmap(os.path.join(outdir, f'{ppl}.mrc'), overwrite=True, shape=sigmas.shape, mrc_mode=2) as mrc:
                 mrc.data[:] = sigmas
 
 
