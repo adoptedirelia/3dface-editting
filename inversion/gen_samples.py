@@ -153,7 +153,7 @@ def generate_images(
 
     os.makedirs(outdir, exist_ok=True)
 
-    ppl = 'dlrb'
+    ppl = 'zdj2'
         
     with open(f'./embeddings/PTI//{ppl}/model_{ppl}.pt', 'rb') as f_new: 
         G = torch.load(f_new).cuda()

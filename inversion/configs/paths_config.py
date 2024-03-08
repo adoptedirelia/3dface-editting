@@ -1,6 +1,6 @@
 ## Pretrained models paths
-eg3d_ffhq = 'F:/mycode/eg3d_pti_inversion/inversion/utils/final_2200.pkl'
-dlib = 'F:/mycode/eg3d_pti_inversion/inversion/utils/align.dat'
+eg3d_ffhq = 'F:/mycode/3dface-pose-editting/inversion/utils/final_2200.pkl'
+dlib = 'F:/mycode/3dface-pose-editting/inversion/utils/align.dat'
 
 ## Dirs for output files
 checkpoints_dir = './checkpoints'
@@ -10,11 +10,11 @@ logdir = '/media/data6/connorzl/pigan/S-GAN/stylegan3/pti_inversion/logs'
 
 ## Input info
 # Location of the cameras json file
-input_pose_path = 'F:/mycode/eg3d_pti_inversion/Deep3DFaceRecon_pytorch/inputs/epoch_20_000000/cameras.json'
+input_pose_path = 'F:/mycode/3dface-pose-editting/Deep3DFaceRecon_pytorch/inputs/epoch_20_000000/cameras.json'
 # The image tag to lookup in the cameras json file
-input_id = 'zdj'
+input_id = 'zdj2'
 # Where the input image resides
-input_data_path = 'F:/mycode/eg3d_pti_inversion/Deep3DFaceRecon_pytorch/inputs/crop_1024'
+input_data_path = 'F:/mycode/3dface-pose-editting/Deep3DFaceRecon_pytorch/inputs/crop_1024'
 # Where the outputs are saved (i.e. embeddings/{input_data_id})
 input_data_id = ''
 

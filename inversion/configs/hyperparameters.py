@@ -25,8 +25,8 @@ temporal_consistency_loss = False
 
 ## Steps
 LPIPS_value_threshold = 0.06
-first_inv_steps = 450
-max_pti_steps = 350
+first_inv_steps = 600
+max_pti_steps = 700
 max_images_to_invert = 30
 
 ## Optimization
