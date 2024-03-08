@@ -32,6 +32,9 @@ https://drive.google.com/file/d/1xwMlnPSvbfjQ4AHoJogs1ldKLitSwCcc/view?usp=shari
 把下载好的文件放入`./inversion/utils/`中
 然后修改`./inversion/configs/paths_config.py`文件，
 
+# 运行测试
+
+抽时间写😋
 
 # 可能遇到的问题
 
