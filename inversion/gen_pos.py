@@ -104,6 +104,8 @@ def create_samples(N=256, voxel_origin=[0, 0, 0], cube_length=2.0):
 
 @click.command()
 @click.option('--ppl', 'people', help='choose a picture', required=True)
+@click.option('--col', 'angel_p', help='column', required=True)
+@click.option('--row', 'angel_y', help='row', required=True)
 @click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
 @click.option('--trunc-cutoff', 'truncation_cutoff', type=int, help='Truncation cutoff', default=14, show_default=True)
 @click.option('--class', 'class_idx', type=int, help='Class label (unconditional if not specified)')
@@ -123,7 +125,9 @@ def generate_images(
     shape_format: str,
     class_idx: Optional[int],
     reload_modules: bool,
-    people: str
+    people: str,
+    angel_p:float,
+    angel_y:float
 ):
     """Generate images using pretrained network pickle.
 
@@ -167,29 +171,25 @@ def generate_images(
     imgs = []
     angle_p = -0.2
     angle_y = 0
-    #for angle_y in range(-5,5,1):
-    #    angle_y /= 10
-    for angle_y, angle_p in [(.4, angle_p),(.2, angle_p), (0, angle_p), (-.2, angle_p),(-.4, angle_p)]:
-    #for angle_p in range(-5,5,1):
-    #    angle_p /=10
-        cam_pivot = torch.tensor(G.rendering_kwargs.get('avg_camera_pivot', [0, 0, 0]), device=device)
-        cam_radius = G.rendering_kwargs.get('avg_camera_radius', 2.7)
-        cam2world_pose = LookAtPoseSampler.sample(np.pi/2 + angle_y, np.pi/2 + angle_p, cam_pivot, radius=cam_radius, device=device)
-        conditioning_cam2world_pose = LookAtPoseSampler.sample(np.pi/2, np.pi/2, cam_pivot, radius=cam_radius, device=device)
-        camera_params = torch.cat([cam2world_pose.reshape(-1, 16), intrinsics.reshape(-1, 9)], 1)
-        conditioning_params = torch.cat([conditioning_cam2world_pose.reshape(-1, 16), intrinsics.reshape(-1, 9)], 1)
 
-        # ws = G.mapping(z, conditioning_params, truncation_psi=truncation_psi, truncation_cutoff=truncation_cutoff)
+    cam_pivot = torch.tensor(G.rendering_kwargs.get('avg_camera_pivot', [0, 0, 0]), device=device)
+    cam_radius = G.rendering_kwargs.get('avg_camera_radius', 2.7)
+    cam2world_pose = LookAtPoseSampler.sample(np.pi/2 + angle_y, np.pi/2 + angle_p, cam_pivot, radius=cam_radius, device=device)
+    conditioning_cam2world_pose = LookAtPoseSampler.sample(np.pi/2, np.pi/2, cam_pivot, radius=cam_radius, device=device)
+    camera_params = torch.cat([cam2world_pose.reshape(-1, 16), intrinsics.reshape(-1, 9)], 1)
+    conditioning_params = torch.cat([conditioning_cam2world_pose.reshape(-1, 16), intrinsics.reshape(-1, 9)], 1)
 
-        with open(f'./embeddings/PTI/{ppl}/optimized_noise_dict.pickle', 'rb') as file:
-            # 使用 pickle.load() 方法加载 pickle 文件中的对象
-            data = pickle.load(file)
-            ws = torch.tensor(data['projected_w']).cuda()
+    # ws = G.mapping(z, conditioning_params, truncation_psi=truncation_psi, truncation_cutoff=truncation_cutoff)
 
-        img = G.synthesis(ws, camera_params)['image']
+    with open(f'./embeddings/PTI/{ppl}/optimized_noise_dict.pickle', 'rb') as file:
+        # 使用 pickle.load() 方法加载 pickle 文件中的对象
+        data = pickle.load(file)
+        ws = torch.tensor(data['projected_w']).cuda()
 
-        img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
-        imgs.append(img)
+    img = G.synthesis(ws, camera_params)['image']
+
+    img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
+    imgs.append(img)
 
     img = torch.cat(imgs, dim=2)
 
