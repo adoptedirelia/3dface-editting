@@ -1,4 +1,5 @@
 import gradio as gr
+import os
 
 def greet(image,row,column):
     print(f"row:{row}")

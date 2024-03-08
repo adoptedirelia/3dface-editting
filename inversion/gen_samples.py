@@ -103,8 +103,9 @@ def create_samples(N=256, voxel_origin=[0, 0, 0], cube_length=2.0):
 #----------------------------------------------------------------------------
 
 @click.command()
-@click.option('--network', 'network_pkl', help='Network pickle filename', required=True)
-@click.option('--seeds', type=parse_range, help='List of random seeds (e.g., \'0,1,4-6\')', required=True)
+@click.option('--ppl', 'people', help='choose a picture', required=True)
+@click.option('--network', 'network_pkl', help='Network pickle filename', required=False)
+@click.option('--seeds', type=parse_range, help='List of random seeds (e.g., \'0,1,4-6\')', required=False)
 @click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
 @click.option('--trunc-cutoff', 'truncation_cutoff', type=int, help='Truncation cutoff', default=14, show_default=True)
 @click.option('--class', 'class_idx', type=int, help='Class label (unconditional if not specified)')
@@ -126,6 +127,7 @@ def generate_images(
     shape_format: str,
     class_idx: Optional[int],
     reload_modules: bool,
+    people: str
 ):
     """Generate images using pretrained network pickle.
 
@@ -137,10 +139,10 @@ def generate_images(
         --network=ffhq-rebalanced-128.pkl
     """
 
-    print('Loading networks from "%s"...' % network_pkl)
+    #print('Loading networks from "%s"...' % network_pkl)
     device = torch.device('cuda')
-    with dnnlib.util.open_url(network_pkl) as f:
-        G = legacy.load_network_pkl(f)['G_ema'].to(device) # type: ignore
+    #with dnnlib.util.open_url(network_pkl) as f:
+    #    G = legacy.load_network_pkl(f)['G_ema'].to(device) # type: ignore
 
     # Specify reload_modules=True if you want code modifications to take effect; otherwise uses pickled code
     if reload_modules:
@@ -153,7 +155,7 @@ def generate_images(
 
     os.makedirs(outdir, exist_ok=True)
 
-    ppl = 'dlrb'
+    ppl = people
         
     with open(f'./embeddings/PTI//{ppl}/model_{ppl}.pt', 'rb') as f_new: 
         G = torch.load(f_new).cuda()
