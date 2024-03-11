@@ -4,6 +4,7 @@ import PIL
 from PIL import Image
 
 def greet(image,row,column):
+    
     print(f"row:{row}")
     print(f"column:{column}")
 
@@ -17,10 +18,19 @@ def greet(image,row,column):
     else:
         print("Folder already exists.")
 
+    # 删除preprocess/inputs下的内容
+
     pic = Image.fromarray(image)
     
     pic.save(save_path)
+    # 运行run.bat的内容
     
+    # python run_pti.py
+
+    # python gen_pos.py --ppl picture --col column --row row --outdir out
+
+    # save_path = ./out/picture.jpg
+
     final = Image.open(save_path)
     return final
 

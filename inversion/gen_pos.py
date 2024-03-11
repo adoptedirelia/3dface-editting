@@ -157,7 +157,7 @@ def generate_images(
 
     ppl = people
         
-    with open(f'./embeddings/PTI//{ppl}/model_{ppl}.pt', 'rb') as f_new: 
+    with open(f'./embeddings/PTI/{ppl}/model_{ppl}.pt', 'rb') as f_new: 
         G = torch.load(f_new).cuda()
 
     cam2world_pose = LookAtPoseSampler.sample(3.14/2, 3.14/2, torch.tensor([0, 0, 0.2], device=device), radius=2.7, device=device)
