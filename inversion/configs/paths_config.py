@@ -12,7 +12,7 @@ logdir = '/media/data6/connorzl/pigan/S-GAN/stylegan3/pti_inversion/logs'
 # Location of the cameras json file
 input_pose_path = 'F:/mycode/3dface-pose-editting/preprocess/inputs/epoch_20_000000/cameras.json'
 # The image tag to lookup in the cameras json file
-input_id = 'zdj2'
+input_id = 'picture'
 # Where the input image resides
 input_data_path = 'F:/mycode/3dface-pose-editting/preprocess/inputs/crop_1024'
 # Where the outputs are saved (i.e. embeddings/{input_data_id})

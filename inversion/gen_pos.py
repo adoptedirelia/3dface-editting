@@ -104,8 +104,8 @@ def create_samples(N=256, voxel_origin=[0, 0, 0], cube_length=2.0):
 
 @click.command()
 @click.option('--ppl', 'people', help='choose a picture', required=True)
-@click.option('--col', 'angel_p', help='column', required=True)
-@click.option('--row', 'angel_y', help='row', required=True)
+@click.option('--col', 'col', help='column', required=True)
+@click.option('--row', 'row', help='row', required=True)
 @click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
 @click.option('--trunc-cutoff', 'truncation_cutoff', type=int, help='Truncation cutoff', default=14, show_default=True)
 @click.option('--class', 'class_idx', type=int, help='Class label (unconditional if not specified)')
@@ -126,8 +126,8 @@ def generate_images(
     class_idx: Optional[int],
     reload_modules: bool,
     people: str,
-    angel_p:float,
-    angel_y:float
+    col:float,
+    row:float
 ):
     """Generate images using pretrained network pickle.
 
@@ -169,8 +169,8 @@ def generate_images(
     z = torch.from_numpy(np.random.RandomState(1234).randn(1, G.z_dim)).to(device)
 
     imgs = []
-    angle_p = -0.2
-    angle_y = 0
+    angle_p = float(col)
+    angle_y = float(row)
 
     cam_pivot = torch.tensor(G.rendering_kwargs.get('avg_camera_pivot', [0, 0, 0]), device=device)
     cam_radius = G.rendering_kwargs.get('avg_camera_radius', 2.7)

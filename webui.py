@@ -23,17 +23,33 @@ def greet(image,row,column):
     pic = Image.fromarray(image)
     
     pic.save(save_path)
-    # 运行run.bat的内容
-    
-    # python run_pti.py
+
+    if os.path.exists('./inversion/embeddings/PTI/picture')==False:
+        # 运行run.bat的内容\
+
+        os.chdir('./preprocess')
+        os.system('run.bat')
+        print("预处理完成！")
+        # python run_pti.py
+
+        os.chdir('../inversion')
+        os.system('python run_pti.py')
+        os.system(f'python gen_pos.py --ppl picture --col {column} --row {row} --outdir out')
 
     # python gen_pos.py --ppl picture --col column --row row --outdir out
+    else:
+        os.chdir('./inversion')
+        # print(os.getcwd())
 
-    # save_path = ./out/picture.jpg
-
-    final = Image.open(save_path)
+        os.system(f'python gen_pos.py --ppl picture --col {column} --row {row} --outdir out')
+    # final_save_path = ./out/picture.jpg
+    # print(os.getcwd())
+    final_save_path = './out/picture.png'
+    final = Image.open(final_save_path)
+    os.chdir('../')
     return final
 
-iface = gr.Interface(fn=greet, inputs=["image",gr.Slider(-1, 1),gr.Slider(-1, 1)], outputs="image")
-iface.launch()
+if __name__ == '__main__':
+    iface = gr.Interface(fn=greet, inputs=["image",gr.Slider(-1, 1),gr.Slider(-1, 1)], outputs="image")
+    iface.launch()
 

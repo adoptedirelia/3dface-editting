@@ -16,3 +16,4 @@ cache*
 /inversion/networks/
 /inversion/embeddings/
 /inversion/out/
+/inversion/pretrained_models/
