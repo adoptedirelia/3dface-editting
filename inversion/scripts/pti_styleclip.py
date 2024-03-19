@@ -2,7 +2,6 @@ import glob
 from argparse import Namespace
 from configs import paths_config
 from models.StyleCLIP.mapper.scripts.inference import run
-from scripts.run_pti import run_PTI
 
 meta_data = {
     'afro': ['afro', False, False, True],
@@ -22,18 +21,16 @@ meta_data = {
 }
 
 
-def styleclip_edit(use_multi_id_G, run_id, use_wandb, edit_types):
+def styleclip_edit(use_multi_id_G, use_wandb, edit_types):
+    run_id = paths_config.input_id
     images_dir = paths_config.input_data_path
     pretrained_mappers = paths_config.style_clip_pretrained_mappers
     data_dir_name = paths_config.input_data_id
-    if run_id == '':
-        run_id = run_PTI(run_name='', use_wandb=use_wandb, use_multi_id_training=False)
-    images = glob.glob(f"{images_dir}/*.jpeg")
+    images = glob.glob(f"{images_dir}/*.png")
+    print(images)
     w_path_dir = f'{paths_config.embedding_base_dir}/{paths_config.input_data_id}'
     for image_name in images:
-        image_name = image_name.split(".")[0].split("/")[-1]
-        print(image_name)
-        image_name = 'zdj2'
+        image_name = paths_config.input_id
         embedding_dir = f'{w_path_dir}/{paths_config.pti_results_keyword}/{image_name}'
         latent_path = f'{embedding_dir}/0.pt'
         for edit_type in set(meta_data.keys()).intersection(edit_types):

@@ -17,8 +17,10 @@ def toogle_grad(model, flag=True):
 
 
 def load_tuned_G(run_id, type, full_path=None):
+    w_path_dir = f'{paths_config.embedding_base_dir}/{paths_config.input_data_id}'
+
     if full_path is None:
-        new_G_path = f'{paths_config.checkpoints_dir}/model_{run_id}_{type}.pt'
+        new_G_path = f'{w_path_dir}/{paths_config.pti_results_keyword}/{run_id}/model_{run_id}.pt'
     else:
         new_G_path = full_path
 

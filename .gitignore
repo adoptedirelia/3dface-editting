@@ -17,3 +17,4 @@ cache*
 /inversion/embeddings/
 /inversion/out/
 /inversion/pretrained_models/
+/inversion/styleclip_output/
