@@ -10,7 +10,9 @@
 ![](./pic_show/pic.png)
 
 ## style变化
+
 ![](./pic_show/taylor_bluehair.jpg)
+![](./pic_show/taylor_smile.jpg)
 
 # 前置要求
 

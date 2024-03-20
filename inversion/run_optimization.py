@@ -114,12 +114,12 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--description", type=str, default="a lady with old face",
+    parser.add_argument("--description", type=str, default="a lady with smiling face",
                         help="the text that guides the editing/generation")
     parser.add_argument("--stylegan_size", type=int, default=512, help="StyleGAN resolution")
     parser.add_argument("--lr_rampup", type=float, default=0.05)
     parser.add_argument("--lr", type=float, default=0.1)
-    parser.add_argument("--step", type=int, default=1000, help="number of optimization steps")
+    parser.add_argument("--step", type=int, default=500, help="number of optimization steps")
     parser.add_argument("--mode", type=str, default="edit", choices=["edit", "free_generation"],
                         help="choose between edit an image an generate a free one")
     parser.add_argument("--l2_lambda", type=float, default=0.008,
