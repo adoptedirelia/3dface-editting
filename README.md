@@ -39,7 +39,14 @@ https://drive.google.com/file/d/1xwMlnPSvbfjQ4AHoJogs1ldKLitSwCcc/view?usp=shari
 
 # 运行测试
 
-抽时间写😋
+```python
+python webui.py
+```
+
+```python
+cd inversion
+python run_optimization.py
+```
 
 # 可能遇到的问题
 
