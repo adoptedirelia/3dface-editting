@@ -18,3 +18,4 @@ cache*
 /inversion/out/
 /inversion/pretrained_models/
 /inversion/styleclip_output/
+/inversion/results/

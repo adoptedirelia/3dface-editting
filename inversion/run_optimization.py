@@ -9,7 +9,7 @@ from torch import optim
 from tqdm import tqdm
 from configs import paths_config, global_config
 import json
-from StyleCLIP.criteria.clip_loss import CLIPLoss
+from models.StyleCLIP.criteria.clip_loss import CLIPLoss
 
 import clip
 #from StyleCLIP.utils import ensure_checkpoint_exists
@@ -23,11 +23,11 @@ def get_lr(t, initial_lr, rampdown=0.25, rampup=0.05):
     return initial_lr * lr_ramp
 
 
-def main(args, use_old_G):
+def main(args):
     # ensure_checkpoint_exists(args.ckpt)
     text_inputs = torch.cat([clip.tokenize(args.description)]).cuda()
     os.makedirs(args.results_dir, exist_ok=True)
-    new_generator_path = f'F:\mycode\3dface-pose-editting\inversion\embeddings\PTI\picture\model_picture.pt'
+    new_generator_path = f'F:\mycode\\3dface-pose-editting\inversion\embeddings\PTI\picture\model_picture.pt'
 
 
     if os.path.basename(paths_config.input_pose_path).split(".")[1] == "json":
@@ -49,7 +49,7 @@ def main(args, use_old_G):
     with open(new_generator_path, 'rb') as f:
         G = torch.load(f).cuda().eval()
 
-    args.latent_path = "F:\mycode\3dface-pose-editting\inversion\embeddings\PTI\picture\optimized_noise_dict.pickle"
+    args.latent_path = "F:\mycode\\3dface-pose-editting\inversion\embeddings\PTI\picture\optimized_noise_dict.pickle"
     if args.latent_path:
         with open(args.latent_path, 'rb') as file:
             # 使用 pickle.load() 方法加载 pickle 文件中的对象
@@ -62,7 +62,8 @@ def main(args, use_old_G):
 
     latent = latent_code_init.detach().clone()
     latent.requires_grad = True
-
+    with torch.no_grad():
+        img_orig = G.synthesis(latent, target_pose, noise_mode='const', force_fp32=True)['image']
     clip_loss = CLIPLoss(args)
 
     optimizer = optim.Adam([latent], lr=args.lr)
@@ -75,7 +76,8 @@ def main(args, use_old_G):
         optimizer.param_groups[0]["lr"] = lr
 
         img_gen = G.synthesis(latent, target_pose, noise_mode='const', force_fp32=True)['image']
-
+        #print(text_inputs.shape)
+        #print(img_gen.shape)
         c_loss = clip_loss(img_gen, text_inputs)
 
         if args.mode == "edit":
@@ -95,15 +97,13 @@ def main(args, use_old_G):
         )
         if args.save_intermediate_image_every > 0 and i % args.save_intermediate_image_every == 0:
             with torch.no_grad():
-                img_gen = G.synthesis(latent, noise_mode='const')
+                img_gen = G.synthesis(latent, target_pose, noise_mode='const', force_fp32=True)['image']
 
             torchvision.utils.save_image(img_gen,
-                                         f"./{str(i).zfill(5)}.png",
-                                         normalize=True, range=(-1, 1))
+                                         f"./out/{str(i).zfill(5)}.png",
+                                         normalize=True, value_range=(-1, 1))
 
     if args.mode == "edit":
-        with torch.no_grad():
-            img_orig = G.synthesis(latent_code_init, noise_mode='const')
 
         final_result = torch.cat([img_orig, img_gen])
     else:
@@ -114,14 +114,12 @@ def main(args, use_old_G):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--description", type=str, default="a person with purple hair",
+    parser.add_argument("--description", type=str, default="a smiling face",
                         help="the text that guides the editing/generation")
-    parser.add_argument("--ckpt", type=str, default="../pretrained_models/stylegan2-ffhq-config-f.pt",
-                        help="pretrained StyleGAN2 weights")
-    parser.add_argument("--stylegan_size", type=int, default=1024, help="StyleGAN resolution")
+    parser.add_argument("--stylegan_size", type=int, default=512, help="StyleGAN resolution")
     parser.add_argument("--lr_rampup", type=float, default=0.05)
     parser.add_argument("--lr", type=float, default=0.1)
-    parser.add_argument("--step", type=int, default=300, help="number of optimization steps")
+    parser.add_argument("--step", type=int, default=500, help="number of optimization steps")
     parser.add_argument("--mode", type=str, default="edit", choices=["edit", "free_generation"],
                         help="choose between edit an image an generate a free one")
     parser.add_argument("--l2_lambda", type=float, default=0.008,
@@ -142,4 +140,4 @@ if __name__ == "__main__":
     result_image = main(args)
 
     torchvision.utils.save_image(result_image.detach().cpu(), os.path.join(args.results_dir, "final_result.jpg"),
-                                 normalize=True, scale_each=True, range=(-1, 1))
+                                 normalize=True, scale_each=True, value_range=(-1, 1))

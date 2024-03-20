@@ -2,6 +2,7 @@ import glob
 from argparse import Namespace
 from configs import paths_config
 from models.StyleCLIP.mapper.scripts.inference import run
+import models.StyleCLIP.optimization.run_optimization 
 
 meta_data = {
     'afro': ['afro', False, False, True],
@@ -54,3 +55,4 @@ def styleclip_edit(use_multi_id_G, use_wandb, edit_types):
             }
 
             run(Namespace(**args), run_id, image_name, use_multi_id_G)
+
