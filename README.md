@@ -1,4 +1,4 @@
-# 3dface-pose-editting
+# 3dface-editting
 
 基于EG3D+PTI的人脸姿势变化，这个readme写的多么详细！快看看吧
 
