@@ -18,8 +18,13 @@ input_data_path = 'F:/mycode/3dface-pose-editting/preprocess/inputs/crop_1024'
 # Where the outputs are saved (i.e. embeddings/{input_data_id})
 input_data_id = ''
 
+# styleclip
 style_clip_pretrained_mappers = 'F:/mycode/3dface-pose-editting/inversion/pretrained_models'
 styleclip_output_dir = './styleclip_output'
+
+## webui
+web_input = './preprocess/inputs'
+web_output = './inversion/out'
 ## Keywords
 pti_results_keyword = 'PTI'
 e4e_results_keyword = 'e4e'

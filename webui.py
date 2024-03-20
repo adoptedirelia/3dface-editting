@@ -2,13 +2,14 @@ import gradio as gr
 import os
 import PIL
 from PIL import Image
+from inversion.configs import paths_config, global_config
 
 def greet(image,row,column):
     
     print(f"row:{row}")
     print(f"column:{column}")
 
-    pic_path = './preprocess/inputs'
+    pic_path = paths_config.web_input
     pic_name = 'picture.jpg'
     save_path = pic_path+'/'+pic_name
 
@@ -44,7 +45,7 @@ def greet(image,row,column):
         os.system(f'python gen_pos.py --ppl picture --col {column} --row {row} --outdir out')
     # final_save_path = ./out/picture.jpg
     # print(os.getcwd())
-    final_save_path = './out/picture.png'
+    final_save_path = paths_config.web_output
     final = Image.open(final_save_path)
     os.chdir('../')
     return final
