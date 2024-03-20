@@ -5,7 +5,12 @@
 
 # 效果展示
 
+## pose变化
+
 ![](./pic_show/pic.png)
+
+## style变化
+![](./pic_show/taylor_bluehair.jpg)
 
 # 前置要求
 
