@@ -1,6 +1,6 @@
 # 3dface-editting
 
-基于EG3D+PTI的人脸姿势变化，这个readme写的多么详细！快看看吧
+基于EG3D+PTI的人脸姿势和风格变化
 
 
 # 效果展示
