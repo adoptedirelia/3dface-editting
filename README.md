@@ -15,10 +15,10 @@
 ![](./pic_show/taylor_smile.jpg)
 
 ## 视频效果
-<video width="512" height="512" controls>
-  <source src="./pic_show/output_video.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+
+好像readme里看不了，可以去`./pic_show`里看
+
+[![Video]](./pic_show/output_video.mp4)
 
 # 前置要求
 
