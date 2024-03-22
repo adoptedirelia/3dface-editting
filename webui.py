@@ -73,7 +73,6 @@ def edit_style(image,prompt):
 
     if os.path.exists('./inversion/embeddings/PTI/picture')==False:
         # 运行run.bat的内容\
-
         os.chdir('./preprocess')
         os.system('run.bat')
         print("预处理完成！")
