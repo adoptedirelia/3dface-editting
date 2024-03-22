@@ -19,3 +19,7 @@ cache*
 /inversion/pretrained_models/
 /inversion/styleclip_output/
 /inversion/results/
+/inversion/styleclip_temp/
+/inversion/webui_out/
+/inversion/video_out/
+/inversion/*.mp4

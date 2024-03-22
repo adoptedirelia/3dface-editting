@@ -95,31 +95,31 @@ def main(args):
                 f"loss: {loss.item():.4f};"
             )
         )
-        if args.save_intermediate_image_every > 0 and i % args.save_intermediate_image_every == 0:
+        if (args.save_intermediate_image_every > 0 and i % args.save_intermediate_image_every == 0) or i==args.step-1:
             with torch.no_grad():
                 img_gen = G.synthesis(latent, target_pose, noise_mode='const', force_fp32=True)['image']
 
             torchvision.utils.save_image(img_gen,
-                                         f"./{paths_config.styleclip_output_dir}/{str(i).zfill(5)}.png",
+                                         f"./{paths_config.styleclip_temp}/{str(i).zfill(5)}.png",
                                          normalize=True, value_range=(-1, 1))
 
     if args.mode == "edit":
-
+        final = img_gen
         final_result = torch.cat([img_orig, img_gen])
     else:
         final_result = img_gen
 
-    return final_result
+    return final
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--description", type=str, default="a lady with smiling face",
+    parser.add_argument("--description", type=str, default="a green hair lady",
                         help="the text that guides the editing/generation")
     parser.add_argument("--stylegan_size", type=int, default=512, help="StyleGAN resolution")
     parser.add_argument("--lr_rampup", type=float, default=0.05)
     parser.add_argument("--lr", type=float, default=0.1)
-    parser.add_argument("--step", type=int, default=500, help="number of optimization steps")
+    parser.add_argument("--step", type=int, default=300, help="number of optimization steps")
     parser.add_argument("--mode", type=str, default="edit", choices=["edit", "free_generation"],
                         help="choose between edit an image an generate a free one")
     parser.add_argument("--l2_lambda", type=float, default=0.008,

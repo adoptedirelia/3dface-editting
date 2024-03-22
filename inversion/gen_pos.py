@@ -22,6 +22,7 @@ import torch
 from tqdm import tqdm
 import mrcfile
 import pickle
+import cv2
 
 import legacy
 from camera_utils import LookAtPoseSampler, FOV_to_intrinsics

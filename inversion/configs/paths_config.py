@@ -20,12 +20,13 @@ input_data_id = ''
 
 # styleclip
 style_clip_pretrained_mappers = 'F:/mycode/3dface-pose-editting/inversion/pretrained_models'
-styleclip_output_dir = './styleclip_output'
+styleclip_output_dir = './styleclip_output/'
+styleclip_temp = './styleclip_temp/'
 
 ## webui
 web_pose = './preprocess/inputs'
-web_pose_output = './inversion/out'
-
+web_pose_output = './inversion/out/'
+web_video_output = './inversion/video_out/'
 
 ## Keywords
 pti_results_keyword = 'PTI'

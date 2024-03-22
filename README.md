@@ -14,6 +14,12 @@
 ![](./pic_show/taylor_bluehair.jpg)
 ![](./pic_show/taylor_smile.jpg)
 
+## 视频效果
+<video width="512" height="512" controls>
+  <source src="./pic_show/output_video.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
 # 前置要求
 
 首先下载这个文件

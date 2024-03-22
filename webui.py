@@ -3,6 +3,7 @@ import os
 import PIL
 from PIL import Image
 from inversion.configs import paths_config, global_config
+import imageio
 
 def edit_pose(image,row,column):
     
@@ -45,34 +46,18 @@ def edit_pose(image,row,column):
         os.system(f'python gen_pos.py --ppl picture --col {column} --row {row} --outdir out')
     # final_save_path = ./out/picture.jpg
     # print(os.getcwd())
-    final_save_path = paths_config.web_output
-    final = Image.open(final_save_path)
+    print(os.getcwd())
     os.chdir('../')
+    final_save_path = paths_config.web_pose_output
+
+    final = Image.open(final_save_path+os.listdir(final_save_path)[0])
+
     return final
 
 def edit_style(image,prompt):
-        
-    print(f"row:{row}")
-    print(f"column:{column}")
-
-    pic_path = paths_config.web_pose
-    pic_name = 'picture.jpg'
-    save_path = pic_path+'/'+pic_name
-
-    if not os.path.exists(pic_path):
-        os.makedirs(pic_path)
-        print("Folder created successfully.")
-    else:
-        print("Folder already exists.")
-
-    # 删除preprocess/inputs下的内容
-
-    pic = Image.fromarray(image)
     
-    pic.save(save_path)
 
     if os.path.exists('./inversion/embeddings/PTI/picture')==False:
-        # 运行run.bat的内容\
 
         os.chdir('./preprocess')
         os.system('run.bat')
@@ -81,44 +66,26 @@ def edit_style(image,prompt):
 
         os.chdir('../inversion')
         os.system('python run_pti.py')
-        os.system(f'python gen_pos.py --ppl picture --col {column} --row {row} --outdir out')
+        os.system(f'python run_optimization.py --description "{prompt}"')
 
-    # python gen_pos.py --ppl picture --col column --row row --outdir out
     else:
         os.chdir('./inversion')
         # print(os.getcwd())
 
-        os.system(f'python gen_pos.py --ppl picture --col {column} --row {row} --outdir out')
+        os.system(f'python run_optimization.py --description "{prompt}"')
+
     # final_save_path = ./out/picture.jpg
     # print(os.getcwd())
-    final_save_path = paths_config.web_output
-    final = Image.open(final_save_path)
+        
+    final_save_path = paths_config.styleclip_output_dir
+    final = Image.open(final_save_path+os.listdir(paths_config.styleclip_output_dir)[0])
     os.chdir('../')
-    return image
+
+    return final
 
 
 def generate_video(image):
 
-        
-    print(f"row:{row}")
-    print(f"column:{column}")
-
-    pic_path = paths_config.web_pose
-    pic_name = 'picture.jpg'
-    save_path = pic_path+'/'+pic_name
-
-    if not os.path.exists(pic_path):
-        os.makedirs(pic_path)
-        print("Folder created successfully.")
-    else:
-        print("Folder already exists.")
-
-    # 删除preprocess/inputs下的内容
-
-    pic = Image.fromarray(image)
-    
-    pic.save(save_path)
-
     if os.path.exists('./inversion/embeddings/PTI/picture')==False:
         # 运行run.bat的内容\
 
@@ -129,20 +96,25 @@ def generate_video(image):
 
         os.chdir('../inversion')
         os.system('python run_pti.py')
-        os.system(f'python gen_pos.py --ppl picture --col {column} --row {row} --outdir out')
+        os.system(f'python gen_samples.py --outdir video_out --ppl picture')
+        os.system('python concate_video.py')
 
     # python gen_pos.py --ppl picture --col column --row row --outdir out
     else:
         os.chdir('./inversion')
         # print(os.getcwd())
 
-        os.system(f'python gen_pos.py --ppl picture --col {column} --row {row} --outdir out')
+        os.system(f'python gen_samples.py --outdir video_out --ppl picture')
+        os.system('python concate_video.py')
+
+
     # final_save_path = ./out/picture.jpg
     # print(os.getcwd())
-    final_save_path = paths_config.web_output
-    final = Image.open(final_save_path)
+
+
+    a = gr.Video('F:\mycode\\3dface-pose-editting\inversion\output_video.mp4')
     os.chdir('../')
-    return final
+    return a
 
 with gr.Blocks(title="3D Face Editing") as demo:
     #用markdown语法编辑输出一段话

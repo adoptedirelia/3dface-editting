@@ -22,6 +22,7 @@ import torch
 from tqdm import tqdm
 import mrcfile
 import pickle
+import imageio
 
 import legacy
 from camera_utils import LookAtPoseSampler, FOV_to_intrinsics
@@ -100,6 +101,23 @@ def create_samples(N=256, voxel_origin=[0, 0, 0], cube_length=2.0):
 
     return samples.unsqueeze(0), voxel_origin, voxel_size
 
+
+def layout_grid(img, grid_w=None, grid_h=1, float_to_uint8=True, chw_to_hwc=True, to_numpy=True):
+    batch_size, channels, img_h, img_w = img.shape
+    if grid_w is None:
+        grid_w = batch_size // grid_h
+    assert batch_size == grid_w * grid_h
+    if float_to_uint8:
+        img = (img * 127.5 + 128).clamp(0, 255).to(torch.uint8)
+    img = img.reshape(grid_h, grid_w, channels, img_h, img_w)
+    img = img.permute(2, 0, 3, 1, 4)
+    img = img.reshape(channels, grid_h * img_h, grid_w * img_w)
+    if chw_to_hwc:
+        img = img.permute(1, 2, 0)
+    if to_numpy:
+        img = img.cpu().numpy()
+    return img
+
 #----------------------------------------------------------------------------
 
 @click.command()
@@ -169,12 +187,26 @@ def generate_images(
     angle_y = 0
     #for angle_y in range(-5,5,1):
     #    angle_y /= 10
-    for angle_y, angle_p in [(.4, angle_p),(.2, angle_p), (0, angle_p), (-.2, angle_p),(-.4, angle_p)]:
-    #for angle_p in range(-5,5,1):
-    #    angle_p /=10
+    num_keyframes = 1
+    w_frames = 240
+    #video_kwargs = {'bitrate': '10M'}
+    #video_out = imageio.get_writer('./out/test.mp4', mode='I', fps=60, codec='libx264', **video_kwargs)
+    imgs = []
+
+    for frame_idx in tqdm(range(num_keyframes * w_frames)):
+        
+        pitch_range = 0.25
+        yaw_range = 0.35
         cam_pivot = torch.tensor(G.rendering_kwargs.get('avg_camera_pivot', [0, 0, 0]), device=device)
         cam_radius = G.rendering_kwargs.get('avg_camera_radius', 2.7)
-        cam2world_pose = LookAtPoseSampler.sample(np.pi/2 + angle_y, np.pi/2 + angle_p, cam_pivot, radius=cam_radius, device=device)
+        G.rendering_kwargs['avg_camera_pivot']=[0,0,0.2]
+        G.rendering_kwargs['avg_camera_radius']=2.7
+        camera_lookat_point = torch.tensor(G.rendering_kwargs['avg_camera_pivot'], device=device)
+
+        cam2world_pose = LookAtPoseSampler.sample(3.14/2 + yaw_range * np.sin(2 * 3.14 * frame_idx / (num_keyframes * w_frames)),
+                                        3.14/2 -0.05 + pitch_range * np.cos(2 * 3.14 * frame_idx / (num_keyframes * w_frames)),
+                                        camera_lookat_point, radius=G.rendering_kwargs['avg_camera_radius'], device=device)
+        #cam2world_pose = LookAtPoseSampler.sample(np.pi/2 + angle_y, np.pi/2 + angle_p, cam_pivot, radius=cam_radius, device=device)
         conditioning_cam2world_pose = LookAtPoseSampler.sample(np.pi/2, np.pi/2, cam_pivot, radius=cam_radius, device=device)
         camera_params = torch.cat([cam2world_pose.reshape(-1, 16), intrinsics.reshape(-1, 9)], 1)
         conditioning_params = torch.cat([conditioning_cam2world_pose.reshape(-1, 16), intrinsics.reshape(-1, 9)], 1)
@@ -187,13 +219,16 @@ def generate_images(
             ws = torch.tensor(data['projected_w']).cuda()
 
         img = G.synthesis(ws, camera_params)['image']
-
+        #img = G.synthesis(ws=ws.unsqueeze(0), c=camera_params[0:1], noise_mode='const')['image'][0]
+        #img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
         img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
+        PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(f'{outdir}/{ppl}_{frame_idx}.png')
+
         imgs.append(img)
 
-    img = torch.cat(imgs, dim=2)
-
-    PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(f'{outdir}/{ppl}.png')
+    print(len(imgs))
+    #video_out.append_data(layout_grid(torch.stack(imgs), grid_w=1, grid_h=1))
+    #video_out.close()
 
     if shapes:
         # extract a shape.mrc with marching cubes. You can view the .mrc file using ChimeraX from UCSF.
