@@ -25,8 +25,9 @@ styleclip_temp = './styleclip_temp/'
 
 ## webui
 web_pose = './preprocess/inputs'
-web_pose_output = './inversion/out/'
-web_video_output = './inversion/video_out/'
+web_pose_output = './inversion/out'
+web_video_output = './inversion/video_out'
+processed_pic = f'./inversion/embeddings/PTI/{input_id}/final_rgb_proj.png'
 
 ## Keywords
 pti_results_keyword = 'PTI'

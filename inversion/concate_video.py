@@ -1,6 +1,8 @@
 import os
 import re
 import imageio
+from configs import paths_config, global_config
+
 
 def images_to_video(image_folder, video_name, fps):
     images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
@@ -16,8 +18,8 @@ def images_to_video(image_folder, video_name, fps):
 
     writer.close()
 
-image_folder = './out/'
+image_folder = paths_config.web_video_output.split('/')[-1]
 video_name = 'output_video.mp4'
-fps = 60
+fps = 30
 
 images_to_video(image_folder, video_name, fps)
