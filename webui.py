@@ -111,13 +111,13 @@ def edit_style(image,prompt,step,lr,l2_lambda):
 
         os.chdir('../inversion')
         os.system('python run_pti.py') 
-        os.system(f'python run_optimization.py --description "{prompt}"')
+        os.system(f'python run_optimization.py --description "{prompt} --step {step} --lr {lr} --l2_lambda {l2_lambda}"')
 
     else:
         os.chdir('./inversion')
         # print(os.getcwd())
 
-        os.system(f'python run_optimization.py --description "{prompt}"')
+        os.system(f'python run_optimization.py --description "{prompt} --step {step} --lr {lr} --l2_lambda {l2_lambda}"')
 
     # final_save_path = ./out/picture.jpg
     # print(os.getcwd())
@@ -125,7 +125,8 @@ def edit_style(image,prompt,step,lr,l2_lambda):
     final_save_path = paths_config.styleclip_output_dir
     final = Image.open(final_save_path+os.listdir(paths_config.styleclip_output_dir)[0])
     os.chdir('../')
-
+    shutil.rmtree(paths_config.styleclip_temp)
+    os.makedirs(paths_config.styleclip_temp)
     return final
 
 
@@ -156,24 +157,26 @@ def generate_video(image,fps,frames):
 
         os.chdir('../inversion')
         os.system('python run_pti.py')
-        os.system(f'python gen_samples.py --outdir {outdir} --ppl picture')
-        os.system('python concate_video.py')
+        os.system(f'python gen_samples.py --outdir {outdir} --ppl picture --frames {frames}')
+        os.system(f'python concate_video.py --fps {fps}')
 
     # python gen_pos.py --ppl picture --col column --row row --outdir out
     else:
         os.chdir('./inversion')
         # print(os.getcwd())
 
-        os.system(f'python gen_samples.py --outdir {outdir} --ppl picture')
-        os.system('python concate_video.py')
+        os.system(f'python gen_samples.py --outdir {outdir} --ppl picture --frames {frames}')
+        os.system(f'python concate_video.py --fps {fps}')
 
 
     # final_save_path = ./out/picture.jpg
     # print(os.getcwd())
 
-
+    
     a = gr.Video('F:\mycode\\3dface-pose-editting\inversion\output_video.mp4')
     os.chdir('../')
+    shutil.rmtree(paths_config.web_video_output)
+    os.makedirs(paths_config.web_video_output)
     return a
 
 with gr.Blocks(title="3D Face Editing") as demo:
@@ -250,7 +253,7 @@ with gr.Blocks(title="3D Face Editing") as demo:
             with gr.Column():
                 video_input = gr.Image()
                 fps = gr.Slider(24,120,value=60,label='fps',info="视频帧率")
-                frames = gr.Slider(60,600,value=60,label='frames',info="视频总帧数")
+                frames = gr.Slider(30,600,value=120,label='frames',info="视频总帧数",step=1)
                 
                 video_button = gr.Button("Generate Video")
                 

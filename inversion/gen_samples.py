@@ -121,6 +121,7 @@ def layout_grid(img, grid_w=None, grid_h=1, float_to_uint8=True, chw_to_hwc=True
 #----------------------------------------------------------------------------
 
 @click.command()
+@click.option('--frames', 'frames', help='frames of video', default=60,required=True)
 @click.option('--ppl', 'people', help='choose a picture', required=True)
 @click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
 @click.option('--trunc-cutoff', 'truncation_cutoff', type=int, help='Truncation cutoff', default=14, show_default=True)
@@ -141,7 +142,8 @@ def generate_images(
     shape_format: str,
     class_idx: Optional[int],
     reload_modules: bool,
-    people: str
+    people: str,
+    frames:int
 ):
     """Generate images using pretrained network pickle.
 
@@ -188,7 +190,7 @@ def generate_images(
     #for angle_y in range(-5,5,1):
     #    angle_y /= 10
     num_keyframes = 1
-    w_frames = 240
+    w_frames = frames
     #video_kwargs = {'bitrate': '10M'}
     #video_out = imageio.get_writer('./out/test.mp4', mode='I', fps=60, codec='libx264', **video_kwargs)
     imgs = []
