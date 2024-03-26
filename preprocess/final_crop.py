@@ -20,6 +20,6 @@ for img in images:
     upper = int(im.size[1]/2 - args.center_crop_size/2)
     right = left + args.center_crop_size
     lower = upper + args.center_crop_size
-    im_cropped = im.crop((left, upper, right,lower))
-    im_cropped = im_cropped.resize((args.output_size, args.output_size), resample=Image.LANCZOS)
+    # TODO: im_cropped = im.crop((left, upper, right,lower))
+    im_cropped = im.resize((args.output_size, args.output_size), resample=Image.LANCZOS)
     im_cropped.save(os.path.join(in_root, os.path.basename(img)))

@@ -67,13 +67,14 @@ def edit_pose(image,row,column):
         os.chdir('../inversion')
         os.system('python run_pti.py')
 
-
+        print(f'python gen_pos.py --ppl picture --col {column} --row {row} --outdir {outdir}')
         os.system(f'python gen_pos.py --ppl picture --col {column} --row {row} --outdir {outdir}')
 
     # python gen_pos.py --ppl picture --col column --row row --outdir out
     else:
         os.chdir('./inversion')
         # print(os.getcwd())
+        print(f'python gen_pos.py --ppl picture --col {column} --row {row} --outdir {outdir}')
 
         os.system(f'python gen_pos.py --ppl picture --col {column} --row {row} --outdir {outdir}')
     # final_save_path = ./out/picture.jpg
@@ -111,11 +112,13 @@ def edit_style(image,prompt,step,lr,l2_lambda):
 
         os.chdir('../inversion')
         os.system('python run_pti.py') 
+        print(f'python run_optimization.py --description "{prompt} --step {step} --lr {lr} --l2_lambda {l2_lambda}"')
         os.system(f'python run_optimization.py --description "{prompt} --step {step} --lr {lr} --l2_lambda {l2_lambda}"')
 
     else:
         os.chdir('./inversion')
         # print(os.getcwd())
+        print(f'python run_optimization.py --description "{prompt} --step {step} --lr {lr} --l2_lambda {l2_lambda}"')
 
         os.system(f'python run_optimization.py --description "{prompt} --step {step} --lr {lr} --l2_lambda {l2_lambda}"')
 
@@ -124,9 +127,10 @@ def edit_style(image,prompt,step,lr,l2_lambda):
         
     final_save_path = paths_config.styleclip_output_dir
     final = Image.open(final_save_path+os.listdir(paths_config.styleclip_output_dir)[0])
-    os.chdir('../')
     shutil.rmtree(paths_config.styleclip_temp)
     os.makedirs(paths_config.styleclip_temp)
+
+    os.chdir('../')
     return final
 
 
