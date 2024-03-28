@@ -23,3 +23,5 @@ cache*
 /inversion/webui_out/
 /inversion/video_out/
 /inversion/*.mp4
+/evaluate/img/
+/evaluate/style_img/

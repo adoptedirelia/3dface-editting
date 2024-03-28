@@ -3,7 +3,7 @@ import os
 
 
 if __name__ == '__main__':
-    title = 'Asian_male'
+    title = 'Foreign_male'
     directory = f'./img/{title}'
     if not os.path.exists(directory):
         try:

@@ -112,15 +112,15 @@ def edit_style(image,prompt,step,lr,l2_lambda):
 
         os.chdir('../inversion')
         os.system('python run_pti.py') 
-        print(f'python run_optimization.py --description "{prompt} --step {step} --lr {lr} --l2_lambda {l2_lambda}"')
-        os.system(f'python run_optimization.py --description "{prompt} --step {step} --lr {lr} --l2_lambda {l2_lambda}"')
+        print(f'python run_optimization.py --description "{prompt}" --step {step} --lr {lr} --l2_lambda {l2_lambda}')
+        os.system(f'python run_optimization.py --description "{prompt}" --step {step} --lr {lr} --l2_lambda {l2_lambda}')
 
     else:
         os.chdir('./inversion')
         # print(os.getcwd())
-        print(f'python run_optimization.py --description "{prompt} --step {step} --lr {lr} --l2_lambda {l2_lambda}"')
+        print(f'python run_optimization.py --description "{prompt}" --step {step} --lr {lr} --l2_lambda {l2_lambda}')
 
-        os.system(f'python run_optimization.py --description "{prompt} --step {step} --lr {lr} --l2_lambda {l2_lambda}"')
+        os.system(f'python run_optimization.py --description "{prompt}" --step {step} --lr {lr} --l2_lambda {l2_lambda}')
 
     # final_save_path = ./out/picture.jpg
     # print(os.getcwd())
