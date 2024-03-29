@@ -11,8 +11,7 @@
 
 ## style变化
 
-![](./pic_show/taylor_bluehair.jpg)
-![](./pic_show/taylor_smile.jpg)
+![](./pic_show/res_2.jpg)
 
 ## 视频效果
 
