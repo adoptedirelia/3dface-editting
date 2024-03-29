@@ -60,8 +60,7 @@ def mse(image1, image2):
     assert image1.shape == image2.shape
     
     # 计算差的平方
-    diff = (image1.astype(float) - image2.astype(float)) ** 2
-    
+    diff = (image1.astype(float)/255 - image2.astype(float)/255) ** 2
     # 计算均方误差
     mse_value = np.mean(diff)
     
