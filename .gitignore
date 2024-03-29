@@ -25,3 +25,6 @@ cache*
 /inversion/*.mp4
 /evaluate/img/
 /evaluate/style_img/
+/evaluate/res/
+/evaluate/*.ipynb
+/inversion/pos_pic/

@@ -92,6 +92,11 @@ def ms_ssim(image1, image2):
     return score
 
 
+def show(dic):
+    for i in dic:
+        print(i)
+        print(sum(dic[i])/len(dic[i]))
+
 if __name__ == '__main__':
     
     lst = ['ours.jpg','out_e4e.jpg','out_SG2.jpg','out_SG2_p.jpg']
@@ -147,4 +152,7 @@ if __name__ == '__main__':
     print(dic_ssim)
     print(dic_id)
 
-
+    show(dic_mse)
+    show(dic_lpips)
+    show(dic_ssim)
+    show(dic_id)
