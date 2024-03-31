@@ -168,7 +168,7 @@ def generate_images(
                 # 使用 pickle.load() 方法加载 pickle 文件中的对象
                 data = pickle.load(file)
                 ws1 = torch.tensor(data['projected_w']).cuda()
-
+                print(ws1.shape)
             with open(f'./embeddings/PTI/dlrb/optimized_noise_dict.pickle', 'rb') as file:
                 # 使用 pickle.load() 方法加载 pickle 文件中的对象
                 data = pickle.load(file)

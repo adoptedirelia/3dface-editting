@@ -56,7 +56,7 @@ class SRPosedGenerator(torch.nn.Module):
 
         planes = planes.view(len(planes), 3, 32, planes.shape[-2], planes.shape[-1])
         feature_samples, depth_samples, weights_samples = self.renderer(planes, self.decoder, ray_origins, ray_directions, self.rendering_kwargs) # channels last
-
+        print(depth_image.shape)
         # RESHAPE INTO INPUT IMAGE
         H = W = self.neural_rendering_resolution
         feature_image = feature_samples.permute(0, 2, 1).reshape(N, feature_samples.shape[-1], H, W).contiguous()

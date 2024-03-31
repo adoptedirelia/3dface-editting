@@ -187,8 +187,19 @@ def generate_images(
         data = pickle.load(file)
         ws = torch.tensor(data['projected_w']).cuda()
 
-    img = G.synthesis(ws, camera_params)['image']
+    img = G.synthesis(ws, camera_params)
+    
 
+    '''
+    img = img['image_depth'][0]
+    img = -img
+    img = (img - img.min()) / (img.max() - img.min()) * 2 - 1
+    print(img.shape)
+    img = (img*127.5+128).clamp(0,255).to(torch.uint8)[0]
+    img = img.cpu().detach().numpy()
+    img = cv2.resize(img, (512, 512), interpolation=cv2.INTER_LINEAR)
+    cv2.imwrite('./show.jpg',img)
+    '''
     img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
     imgs.append(img)
 
