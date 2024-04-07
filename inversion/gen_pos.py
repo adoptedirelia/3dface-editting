@@ -186,8 +186,8 @@ def generate_images(
         # 使用 pickle.load() 方法加载 pickle 文件中的对象
         data = pickle.load(file)
         ws = torch.tensor(data['projected_w']).cuda()
-
-    img = G.synthesis(ws, camera_params)
+    print(camera_params.shape)
+    img = G.synthesis(ws, camera_params)['image']
     
 
     '''
