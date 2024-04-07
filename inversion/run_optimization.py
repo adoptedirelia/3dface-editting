@@ -108,13 +108,17 @@ def main(args):
         final_result = torch.cat([img_orig, img_gen])
     else:
         final_result = img_gen
-
+    optimized_dict = {
+        'projected_w': latent.detach().cpu().numpy(),
+    }
+    with open(f'./embeddings/PTI/picture/style.pickle', 'wb') as handle:
+        pickle.dump(optimized_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
     return final
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--description", type=str, default="happy",
+    parser.add_argument("--description", type=str, default="a person with blue hair",
                         help="the text that guides the editing/generation")
     parser.add_argument("--stylegan_size", type=int, default=512, help="StyleGAN resolution")
     parser.add_argument("--lr_rampup", type=float, default=0.05)

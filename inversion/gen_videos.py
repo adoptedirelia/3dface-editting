@@ -93,6 +93,8 @@ def gen_interp_video(G, mp4: str,w_frames=60*4, kind='cubic', grid_dims=(1,1), n
         # 使用 pickle.load() 方法加载 pickle 文件中的对象
         data = pickle.load(file)
         ws = torch.tensor(data['projected_w']).cuda()
+
+    
     _ = G.synthesis(ws[:1], c[:1]) # warm up
     print(ws.shape)
     print(*ws.shape[1:])
