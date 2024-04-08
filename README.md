@@ -85,9 +85,10 @@ UnicodeDecodeError: 'cp949' codec can't decode byte 0xbf in position 2: illegal 
 
 
 
-# 未完成的部分
+# 即将完成的
 
-- 和diffusion的对比实验
-- 和基础模型的对比实验
-- 消融实验
-- fid+clip_scores
+- 和diffusion的对比实验 ❌
+- 和基础模型的对比实验 ❌ 
+- 消融实验 ❌
+- fid ✔
+- clip-scores ✔

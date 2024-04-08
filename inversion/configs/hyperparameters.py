@@ -9,7 +9,7 @@ batch_size = 4
 ## Locality regularization
 latent_ball_num_of_samples = 1
 locality_regularization_interval = 1
-use_locality_regularization = False
+use_locality_regularization = True
 use_noise_regularization = False 
 use_mouth_inpainting = True
 regulizer_l2_lambda = 0.1

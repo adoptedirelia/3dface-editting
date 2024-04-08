@@ -26,5 +26,8 @@ cache*
 /evaluate/img/
 /evaluate/style_img/
 /evaluate/res/
+/evaluate/clip_score/
+/evaluate/fid/
+/evaluate/self_com/
 /evaluate/*.ipynb
 /inversion/pos_pic/
