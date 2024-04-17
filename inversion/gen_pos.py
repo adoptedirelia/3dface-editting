@@ -222,7 +222,13 @@ def generate_images(
             with torch.no_grad():
                 while head < samples.shape[1]:
                     torch.manual_seed(0)
-                    sigma = G.sample(samples[:, head:head+max_batch], transformed_ray_directions_expanded[:, :samples.shape[1]-head], z, conditioning_params, truncation_psi=truncation_psi, truncation_cutoff=truncation_cutoff, noise_mode='const')['sigma']
+                    
+                    #sigma = G.sample(samples[:, head:head+max_batch], transformed_ray_directions_expanded[:, :samples.shape[1]-head], z, conditioning_params, truncation_psi=truncation_psi, truncation_cutoff=truncation_cutoff, noise_mode='const')['sigma']
+                    # ws = G.mapping(z, c, truncation_psi=truncation_psi, truncation_cutoff=truncation_cutoff, update_emas=False)
+                    planes = G.backbone.synthesis(ws, update_emas=False, noise_mode='const')
+                    planes = planes.view(len(planes), 3, 32, planes.shape[-2], planes.shape[-1])
+                    sigma = G.renderer.run_model(planes, G.decoder, samples[:, head:head+max_batch],  transformed_ray_directions_expanded[:, :samples.shape[1]-head], G.rendering_kwargs)['sigma']
+
                     sigmas[:, head:head+max_batch] = sigma
                     head += max_batch
                     pbar.update(max_batch)
@@ -242,7 +248,9 @@ def generate_images(
 
         if shape_format == '.ply':
             from shape_utils import convert_sdf_samples_to_ply
-            convert_sdf_samples_to_ply(np.transpose(sigmas, (2, 1, 0)), [0, 0, 0], 1, os.path.join(outdir, f'seed{seed:04d}.ply'), level=10)
+            print(sigma.shape)
+
+            convert_sdf_samples_to_ply(np.transpose(sigmas, (2, 1, 0)), [0, 0, 0], 1, os.path.join(outdir, f'{ppl}.ply'), level=10)
         elif shape_format == '.mrc': # output mrc
             with mrcfile.new_mmap(os.path.join(outdir, f'{ppl}.mrc'), overwrite=True, shape=sigmas.shape, mrc_mode=2) as mrc:
                 mrc.data[:] = sigmas

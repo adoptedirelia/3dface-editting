@@ -84,11 +84,29 @@ UnicodeDecodeError: 'cp949' codec can't decode byte 0xbf in position 2: illegal 
 下载`VS studio`，打开`./inversion/torch_utils/custom_ops.py`，将自己`VS studio`的路径加入上图的函数中的`pattern`中
 
 
+# ?
+
+```python
+final_crop.py
+
+取消注释
+
+im_cropped = im.crop((left, upper, right,lower))
+im_cropped = im_cropped.resize((args.output_size, args.output_size), resample=Image.LANCZOS)
+
+util/preprocess.py
+
+取消注释
+
+img = img.resize((w, h), resample=Image.LANCZOS)
+img = img.crop((left, up, right, below))
+```
 
 # 即将完成的
 
-- 和diffusion的对比实验 ❌
+- 和diffusion的对比实验 ✔
 - 和基础模型的对比实验 ❌ 
-- 消融实验 ❌
+- 消融实验 ✔
 - fid ✔
 - clip-scores ✔
+- 两个男性角色的实验

@@ -144,7 +144,7 @@ def resize_n_crop_img(img, lm, t, s, target_size=1024., mask=None):
     below = up + target_size
     # img.save("/home/koki/Projects/Deep3DFaceRecon_pytorch/checkpoints/pretrained/results/iphone/epoch_20_000000/img_debug.jpg")
     # TODO: img = img.resize((w, h), resample=Image.LANCZOS)
-    #img = img.resize((w, h), resample=Image.LANCZOS)
+    img = img.resize((w, h), resample=Image.LANCZOS)
 
     # img = np.asarray(img)
     # cx = int(0.5 * left + 0.5 * right)
@@ -153,7 +153,7 @@ def resize_n_crop_img(img, lm, t, s, target_size=1024., mask=None):
     # img = Image.fromarray(img)
     # print(str(cx/s) + " " + str(cy/s))
     # TODO: img = img.crop((left, up, right, below))
-    #img = img.crop((left, up, right, below))
+    img = img.crop((left, up, right, below))
 
     
     if mask is not None:
