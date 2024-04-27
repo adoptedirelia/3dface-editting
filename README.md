@@ -17,7 +17,8 @@
 
 好像readme里看不了，可以去`./pic_show`里看
 
-[![Video]](./pic_show/output_video.mp4)
+https://github.com/adoptedirelia/3dface-editting/assets/80034148/c85bbc11-709c-4398-8e38-e1d481e2b88e
+
 
 # 前置要求
 
@@ -105,8 +106,15 @@ img = img.crop((left, up, right, below))
 # 即将完成的
 
 - 和diffusion的对比实验 ✔
-- 和基础模型的对比实验 ❌ 
+- 和基础模型的对比实验 ✔
 - 消融实验 ✔
 - fid ✔
 - clip-scores ✔
-- 两个男性角色的实验
+- 两个男性角色的实验 ✔
+
+# 想法
+
+taylor 蓝发
+female 老
+sheldon smile
+male 生气

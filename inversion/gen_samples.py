@@ -216,7 +216,7 @@ def generate_images(
         # ws = G.mapping(z, conditioning_params, truncation_psi=truncation_psi, truncation_cutoff=truncation_cutoff)
         
         #with open(f'./embeddings/PTI/{ppl}/optimized_noise_dict.pickle', 'rb') as file:
-        with open(f'./embeddings/PTI/{ppl}/style.pickle', 'rb') as file:
+        with open(f'./embeddings/PTI/{ppl}/angry.pickle', 'rb') as file:
             # 使用 pickle.load() 方法加载 pickle 文件中的对象
             data = pickle.load(file)
             ws = torch.tensor(data['projected_w']).cuda()

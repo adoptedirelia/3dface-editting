@@ -1,6 +1,6 @@
 import os
 import re
-import imageio
+import imageio.v2 as imageio
 from configs import paths_config, global_config
 import argparse
 
