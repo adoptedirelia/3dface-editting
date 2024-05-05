@@ -14,16 +14,16 @@ from tqdm import tqdm
 
 file = open('./output.json','w')
 dic = {}
-for method in os.listdir('./img'):
+for method in os.listdir('./self_com'):
     dic[method] = {}
-    for ppl in os.listdir(f'./img/{method}'):
+    for ppl in os.listdir(f'./self_com/{method}'):
         dic[method][ppl] = {}
-        for filedir in os.listdir(f'./img/{method}/{ppl}'):
+        for filedir in os.listdir(f'./self_com/{method}/{ppl}'):
             print(f"\033[1;31;44m{method}/{ppl}/{filedir}\033[0m")
             dic[method][ppl][filedir] = {}
 
 
-            path = f'./img/{method}/{ppl}'
+            path = f'./self_com/{method}/{ppl}'
             ori = cv2.imread(f'{path}/ori/ori.png')
             ori = cv2.resize(ori,(512,512))
             if filedir == 'ori':

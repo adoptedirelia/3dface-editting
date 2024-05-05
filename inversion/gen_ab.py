@@ -135,7 +135,7 @@ def generate_images(
     device = torch.device('cuda')
     os.makedirs(outdir, exist_ok=True)
 
-    ppl = 'taylor'
+    ppl = 'dlrb'
         
     with open(f'./embeddings/PTI/{ppl}/model_{ppl}.pt', 'rb') as f_new: 
         G = torch.load(f_new).cuda()
@@ -153,7 +153,7 @@ def generate_images(
         angle_y = 0
         #for angle_y in range(-10,10,1):
         #    angle_y /= 10
-        for angle_y, angle_p in [(.4, angle_p),(.2, angle_p), (0, angle_p), (-.2, angle_p),(-.4, angle_p)]:
+        for angle_y, angle_p in [(0, angle_p)]:
         #for angle_p in range(-5,5,1):
             cam_pivot = torch.tensor(G.rendering_kwargs.get('avg_camera_pivot', [0, 0, 0]), device=device)
             cam_radius = G.rendering_kwargs.get('avg_camera_radius', 2.7)
@@ -164,7 +164,7 @@ def generate_images(
 
             # ws = G.mapping(z, conditioning_params, truncation_psi=truncation_psi, truncation_cutoff=truncation_cutoff)
 
-            with open(f'./embeddings/PTI/{ppl}/optimized_noise_dict.pickle', 'rb') as file:
+            with open(f'./embeddings/PTI/taylor/optimized_noise_dict.pickle', 'rb') as file:
                 # 使用 pickle.load() 方法加载 pickle 文件中的对象
                 data = pickle.load(file)
                 ws1 = torch.tensor(data['projected_w']).cuda()
@@ -174,7 +174,7 @@ def generate_images(
                 data = pickle.load(file)
                 ws2 = torch.tensor(data['projected_w']).cuda()
 
-            ratio = 1
+            ratio = 0.5
             ws = ratio*ws1 + (1-ratio)*ws2
             img = G.synthesis(ws, camera_params)['image']
 

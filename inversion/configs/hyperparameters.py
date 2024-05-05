@@ -17,11 +17,15 @@ regulizer_lpips_lambda = 0.1
 regulizer_alpha = 30
 
 ## Loss
+clip_lambda = 1
+# model
 pt_l2_lambda = 1
 pt_lpips_lambda = 1
 pt_temporal_photo_lambda = 0
 pt_temporal_depth_lambda = 0
 temporal_consistency_loss = False
+# inversion
+inversion = 1
 
 ## Steps
 LPIPS_value_threshold = 0.06
@@ -34,4 +38,7 @@ pti_learning_rate = 3e-4
 first_inv_lr = 5e-3
 train_batch_size = 1
 use_last_w_pivots = False
+
+## loss parameteres
+
 

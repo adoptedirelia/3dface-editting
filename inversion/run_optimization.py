@@ -5,15 +5,55 @@ import pickle
 import numpy as np
 import torch
 import torchvision
+import torch
+import torch.nn as nn
+import torchvision.models as models
+import torchvision.transforms as transforms
 from torch import optim
 from tqdm import tqdm
-from configs import paths_config, global_config
+from configs import paths_config, global_config,hyperparameters
 import json
 from models.StyleCLIP.criteria.clip_loss import CLIPLoss
-
+from PIL import Image
 import clip
 #from StyleCLIP.utils import ensure_checkpoint_exists
 
+
+# 加载预训练的ResNet模型
+resnet_model = models.resnet18(pretrained=True).cuda()
+# 去掉最后一层全连接层
+resnet_model = nn.Sequential(*list(resnet_model.children())[:-1])
+# 设置为评估模式
+
+# 图像预处理函数
+preprocess = transforms.Compose([
+    transforms.Resize(256),
+    transforms.CenterCrop(224),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+])
+
+def load_and_preprocess_image(img):
+    image = Image.fromarray(img)
+    #image = image.resize((512,512))
+    image = preprocess(image)
+    # 添加一个维度作为批处理维度
+    image = image.unsqueeze(0)
+    return image
+
+# 提取图像的特征
+def extract_features(image):
+    features = resnet_model(image)
+    return features.squeeze()
+
+# 计算两张图像之间的ID相似度
+# 越高越好
+def id_similarity(image1, image2):
+    features1 = extract_features(image1)
+    features2 = extract_features(image2)
+    # 计算余弦相似度
+    similarity = torch.nn.functional.cosine_similarity(features1,features2, dim=0)
+    return similarity
 
 def get_lr(t, initial_lr, rampdown=0.25, rampup=0.05):
     lr_ramp = min(1, (1 - t) / rampdown)
@@ -63,7 +103,7 @@ def main(args):
     latent = latent_code_init.detach().clone()
     latent.requires_grad = True
     with torch.no_grad():
-        img_orig = G.synthesis(latent, target_pose, noise_mode='const', force_fp32=True)['image']
+        img_orig = G.synthesis(latent, target_pose, noise_mode='const', force_fp32=True)['image'].cuda()
     clip_loss = CLIPLoss(args)
 
     optimizer = optim.Adam([latent], lr=args.lr)
@@ -76,13 +116,16 @@ def main(args):
         optimizer.param_groups[0]["lr"] = lr
 
         img_gen = G.synthesis(latent, target_pose, noise_mode='const', force_fp32=True)['image']
+
         #print(text_inputs.shape)
         #print(img_gen.shape)
         c_loss = clip_loss(img_gen, text_inputs)
 
         if args.mode == "edit":
             l2_loss = ((latent_code_init - latent) ** 2).sum()
-            loss = c_loss + args.l2_lambda * l2_loss
+            #loss = hyperparameters.clip_lambda*c_loss + args.l2_lambda * l2_loss + -0.5*id_similarity(img_gen,img_orig)
+            #loss = hyperparameters.clip_lambda*c_loss + args.l2_lambda * l2_loss
+            loss = hyperparameters.clip_lambda*c_loss
         else:
             loss = c_loss
 
@@ -118,8 +161,10 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--description", type=str, default="an old lady",
+    parser.add_argument("--description", type=str, default="a person with blue hair",
                         help="the text that guides the editing/generation")
+    parser.add_argument("--file_name", type=str, default="final_result.png",
+                        help="save file name")
     parser.add_argument("--stylegan_size", type=int, default=512, help="StyleGAN resolution")
     parser.add_argument("--lr_rampup", type=float, default=0.05)
     parser.add_argument("--lr", type=float, default=0.1)
@@ -142,5 +187,5 @@ if __name__ == "__main__":
 
     result_image = main(args)
 
-    torchvision.utils.save_image(result_image.detach().cpu(), os.path.join(paths_config.styleclip_output_dir, "final_result.jpg"),
+    torchvision.utils.save_image(result_image.detach().cpu(), os.path.join(paths_config.styleclip_output_dir, args.file_name),
                                  normalize=True, scale_each=True, value_range=(-1, 1))

@@ -369,7 +369,7 @@ def project(
                 if noise.shape[2] <= 8:
                     break
                 noise = F.avg_pool2d(noise, kernel_size=2)
-        loss = dist + reg_loss * regularize_noise_weight
+        loss = hyperparameters.inversion*dist + reg_loss * regularize_noise_weight
 
         if step % 5 == 0:
             synth_image = (synth_images_orig + 1) * (255/2)

@@ -27,7 +27,10 @@ cache*
 /evaluate/style_img/
 /evaluate/res/
 /evaluate/clip_score/
-/evaluate/fid/
+/evaluate/mix/
 /evaluate/self_com/
+/evaluate/clip_text/
+/evaluate/img_temp/
 /evaluate/*.ipynb
 /inversion/pos_pic/
+/inversion/video_test/
