@@ -11,7 +11,7 @@
 
 ## style变化
 
-![](./pic_show/final.jpg)
+![](./pic_show/res_2.jpg)
 
 ## 风格融合
 
