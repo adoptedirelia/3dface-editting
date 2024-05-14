@@ -124,8 +124,8 @@ def main(args):
         if args.mode == "edit":
             l2_loss = ((latent_code_init - latent) ** 2).sum()
             #loss = hyperparameters.clip_lambda*c_loss + args.l2_lambda * l2_loss + -0.5*id_similarity(img_gen,img_orig)
-            #loss = hyperparameters.clip_lambda*c_loss + args.l2_lambda * l2_loss
-            loss = hyperparameters.clip_lambda*c_loss
+            loss = hyperparameters.clip_lambda*c_loss + args.l2_lambda * l2_loss
+            #loss = hyperparameters.clip_lambda*c_loss
         else:
             loss = c_loss
 
@@ -161,7 +161,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--description", type=str, default="a person with blue hair",
+    parser.add_argument("--description", type=str, default="a blue hair person",
                         help="the text that guides the editing/generation")
     parser.add_argument("--file_name", type=str, default="final_result.png",
                         help="save file name")
